@@ -1,9 +1,9 @@
-module.exports = function(NODE) {
+'use strict';
 
-	let msecOut = NODE.getOutputByName('msec');
+module.exports = (NODE) => {
+  const msecOut = NODE.getOutputByName('msec');
 
-	msecOut.on('trigger', (conn, state, callback) => {
-		callback(Date.now());
-	});
-
+  msecOut.on('trigger', (conn, state, callback) => {
+    callback(Date.now());
+  });
 };

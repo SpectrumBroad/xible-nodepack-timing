@@ -1,39 +1,31 @@
-module.exports = function(NODE) {
+'use strict';
 
-	let triggerIn = NODE.getInputByName('trigger');
-	let msecIn = NODE.getInputByName('msecs');
+module.exports = (NODE) => {
+  const triggerIn = NODE.getInputByName('trigger');
+  const msecIn = NODE.getInputByName('msecs');
 
-	let triggerOut = NODE.getOutputByName('done');
+  const triggerOut = NODE.getOutputByName('done');
 
-	triggerIn.on('trigger', (conn, state) => {
+  triggerIn.on('trigger', (conn, state) => {
+    msecIn.getValues(state).then((delays) => {
+      let fromData = false;
+      if (!delays.length) {
+        fromData = true;
+        delays.push(NODE.data.delay || 0);
+      }
 
-		msecIn.getValues(state).then(delays => {
+      delays.forEach((delay) => {
+        delay = Math.round(delay);
 
-			let fromData = false;
-			if (!delays.length) {
+        NODE.addProgressBar({
+          message: (fromData ? null : `waiting for ${delay} msec`),
+          percentage: 0,
+          updateOverTime: delay,
+          timeout: delay + 700
+        });
 
-				fromData = true;
-				delays.push(NODE.data.delay || 0);
-
-			}
-
-			delays.forEach((delay) => {
-
-				delay = Math.round(delay);
-
-				let statusId = NODE.addProgressBar({
-					message: (fromData ? null : `waiting for ${delay} msec`),
-					percentage: 0,
-					updateOverTime: delay,
-					timeout: delay + 700
-				});
-
-				setTimeout(() => triggerOut.trigger(state), delay);
-
-			});
-
-		});
-
-	});
-
+        setTimeout(() => triggerOut.trigger(state), delay);
+      });
+    });
+  });
 };

@@ -1,47 +1,43 @@
-module.exports = function(NODE) {
+'use strict';
 
-	let fullDateOut = NODE.getOutputByName('fulldate');
+module.exports = (NODE) => {
+  const fullDateOut = NODE.getOutputByName('fulldate');
 
-	fullDateOut.on('trigger', (conn, state, callback) => {
-		callback(new Date());
-	});
+  fullDateOut.on('trigger', (conn, state, callback) => {
+    callback(new Date());
+  });
 
-	let timeOut = NODE.getOutputByName('time');
+  const timeOut = NODE.getOutputByName('time');
 
-	timeOut.on('trigger', (conn, state, callback) => {
+  timeOut.on('trigger', (conn, state, callback) => {
+    const d = new Date();
+    d.setFullYear(0, 0, 1);
+    callback(d);
+  });
 
-		let d = new Date();
-		d.setFullYear(0, 0, 1);
-		callback(d);
+  const yearOut = NODE.getOutputByName('year');
+  const monthOut = NODE.getOutputByName('month');
+  const dateOut = NODE.getOutputByName('date');
+  const hoursOut = NODE.getOutputByName('hours');
+  const minutesOut = NODE.getOutputByName('minutes');
+  const secondsOut = NODE.getOutputByName('seconds');
 
-	});
+  function numberOutTrigger(conn, state, callback) {
+    let name = this.name;
 
-	let yearOut = NODE.getOutputByName('year');
-	let monthOut = NODE.getOutputByName('month');
-	let dateOut = NODE.getOutputByName('date');
-	let hoursOut = NODE.getOutputByName('hours');
-	let minutesOut = NODE.getOutputByName('minutes');
-	let secondsOut = NODE.getOutputByName('seconds');
+    if (name === 'year') {
+      name = 'fullYear';
+    }
 
-	let numberOutTrigger = function(conn, state, callback) {
+    const d = new Date();
+    name = name.substring(0, 1).toUpperCase() + this.name.substring(1);
+    callback(d[`get${name}`]());
+  }
 
-		let name = this.name;
-
-		if (name === 'year') {
-			name = 'fullYear';
-		}
-
-		var d = new Date();
-		name = name.substring(0, 1).toUpperCase() + this.name.substring(1);
-		callback(d['get' + name]());
-
-	};
-
-	yearOut.on('trigger', numberOutTrigger);
-	monthOut.on('trigger', numberOutTrigger);
-	dateOut.on('trigger', numberOutTrigger);
-	hoursOut.on('trigger', numberOutTrigger);
-	minutesOut.on('trigger', numberOutTrigger);
-	secondsOut.on('trigger', numberOutTrigger);
-
+  yearOut.on('trigger', numberOutTrigger);
+  monthOut.on('trigger', numberOutTrigger);
+  dateOut.on('trigger', numberOutTrigger);
+  hoursOut.on('trigger', numberOutTrigger);
+  minutesOut.on('trigger', numberOutTrigger);
+  secondsOut.on('trigger', numberOutTrigger);
 };
