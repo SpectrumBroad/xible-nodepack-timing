@@ -7,7 +7,7 @@
       "type": "date"
     },
     "time": {
-      "type": "time"
+      "type": "timing.time"
     },
     "year": {
       "type": "math.number"
