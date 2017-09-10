@@ -1,0 +1,6 @@
+{
+  "timing.time": {
+    "color": "navy",
+    "extends": "object"
+  }
+}

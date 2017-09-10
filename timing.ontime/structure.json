@@ -5,6 +5,9 @@
   "inputs": {
     "trigger": {
       "type": "trigger"
+    },
+    "times": {
+      "type": "timing.time"
     }
   },
   "outputs": {
@@ -12,19 +15,8 @@
       "type": "trigger"
     },
     "condition": {
-      "type": "boolean"
-    },
-    "time": {
-      "type": "time"
-    },
-    "hours": {
-      "type": "math.number"
-    },
-    "minutes": {
-      "type": "math.number"
-    },
-    "seconds": {
-      "type": "math.number"
+      "type": "boolean",
+      "description": "Confirms whether one of the connected 'times' inputs is the current time."
     }
   }
 }

@@ -1,0 +1,19 @@
+{
+  "name": "timing.time",
+  "type": "object",
+  "description": "A time of day representation.",
+  "outputs": {
+    "time": {
+      "type": "timing.time"
+    },
+    "hours": {
+      "type": "math.number"
+    },
+    "minutes": {
+      "type": "math.number"
+    },
+    "seconds": {
+      "type": "math.number"
+    }
+  }
+}

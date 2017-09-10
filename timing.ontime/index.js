@@ -1,94 +1,59 @@
 'use strict';
 
 module.exports = (NODE) => {
-  let timeout;
+  let timeouts = [];
 
   const triggerIn = NODE.getInputByName('trigger');
   triggerIn.on('trigger', (conn, state) => {
     triggerFunction(state);
   });
 
+  const timesIn = NODE.getInputByName('times');
+
   const triggerOut = NODE.getOutputByName('trigger');
   const conditionOut = NODE.getOutputByName('condition');
-  conditionOut.on('trigger', (conn, state, callback) => {
-    const d = getInputTime();
+  conditionOut.on('trigger', async (conn, state, callback) => {
+    const inputTimes = await timesIn.getValues(state);
 
     const now = new Date();
     now.setFullYear(0, 0, 1);
 
-    // calc the difference between the requested time and now
-    const diff = d.getTime() - now.getTime();
-
-    // anything within a second equals true
-    callback(Math.abs(diff) < 1000);
+    for (let i = 0; i < inputTimes.length; i += 1) {
+      if (Math.abs(inputTimes[i].getTime() - now.getTime()) < 1000) {
+        callback(true);
+        return;
+      }
+    }
+    callback(false);
   });
-
-  const timeOut = NODE.getOutputByName('time');
-  timeOut.on('trigger', (conn, state, callback) => {
-    callback(getInputTime(NODE));
-  });
-
-  const hoursOut = NODE.getOutputByName('hours');
-  const minutesOut = NODE.getOutputByName('minutes');
-  const secondsOut = NODE.getOutputByName('seconds');
-
-  const numberOutTrigger = (state, callback) => {
-    const d = getInputTime(this.node);
-    const name = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
-    callback(d[`get${name}`]());
-  };
-
-  hoursOut.on('trigger', numberOutTrigger);
-  minutesOut.on('trigger', numberOutTrigger);
-  secondsOut.on('trigger', numberOutTrigger);
 
   NODE.on('close', () => {
-    if (timeout) {
+    timeouts.forEach((timeout) => {
       clearTimeout(timeout);
-      timeout = null;
-    }
+    });
+    timeouts = [];
   });
 
-  function getInputTime() {
-    const input = NODE.data.time.split(':');
-
-    const d = new Date();
-    d.setFullYear(0, 0, 1);
-    d.setHours(+input[0]);
-
-    if (input.length > 1) {
-      d.setMinutes(+input[1]);
-    } else {
-      d.setMinutes(0);
-    }
-
-    if (input.length > 2) {
-      d.setSeconds(+input[2]);
-    } else {
-      d.setSeconds(0);
-    }
-
-    return d;
-  }
-
-  function triggerFunction(state) {
-    const d = getInputTime();
+  async function triggerFunction(state) {
+    const inputTimes = await timesIn.getValues(state);
 
     const now = new Date();
     now.setFullYear(0, 0, 1);
 
-    // calc the difference between the requested time and now
-    const diff = d.getTime() - now.getTime();
+    inputTimes.forEach((d) => {
+      // calc the difference between the requested time and now
+      const diff = d.getTime() - now.getTime();
 
-    // setTimeout trigger on the difference
-    // unless it's this second, than trigger immediately
-    if (diff >= 0 && diff < 1000) {
-      triggerOut.trigger(state);
-    } else if (diff > 0) {
-      timeout = setTimeout(() => {
+      // setTimeout trigger on the difference
+      // unless it's this second, than trigger immediately
+      if (diff >= 0 && diff < 1000) {
         triggerOut.trigger(state);
-      }, diff);
-    }
+      } else if (diff > 0) {
+        timeouts.push(setTimeout(() => {
+          triggerOut.trigger(state);
+        }, diff));
+      }
+    });
   }
 
   NODE.on('trigger', (state) => {
