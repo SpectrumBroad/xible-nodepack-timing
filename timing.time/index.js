@@ -3,18 +3,18 @@
 module.exports = (NODE) => {
   const timeOut = NODE.getOutputByName('time');
   timeOut.on('trigger', (conn, state, callback) => {
-    callback(getInputTime(NODE));
+    callback(getInputTime());
   });
 
   const hoursOut = NODE.getOutputByName('hours');
   const minutesOut = NODE.getOutputByName('minutes');
   const secondsOut = NODE.getOutputByName('seconds');
 
-  const numberOutTrigger = (state, callback) => {
-    const d = getInputTime(this.node);
+  function numberOutTrigger(conn, state, callback) {
+    const d = getInputTime();
     const name = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
     callback(d[`get${name}`]());
-  };
+  }
 
   hoursOut.on('trigger', numberOutTrigger);
   minutesOut.on('trigger', numberOutTrigger);
