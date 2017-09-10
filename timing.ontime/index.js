@@ -10,6 +10,18 @@ module.exports = (NODE) => {
 
   const triggerOut = NODE.getOutputByName('trigger');
   const conditionOut = NODE.getOutputByName('condition');
+  conditionOut.on('trigger', (conn, state, callback) => {
+    const d = getInputTime();
+
+    const now = new Date();
+    now.setFullYear(0, 0, 1);
+
+    // calc the difference between the requested time and now
+    const diff = d.getTime() - now.getTime();
+
+    // anything within a second equals true
+    callback(Math.abs(diff) < 1000);
+  });
 
   const timeOut = NODE.getOutputByName('time');
   timeOut.on('trigger', (conn, state, callback) => {
