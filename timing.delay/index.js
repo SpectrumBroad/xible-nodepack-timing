@@ -33,10 +33,10 @@ module.exports = (NODE) => {
   });
 
   clearIn.on('trigger', () => {
-    // TODO: clear progress bars as well
     regTimeouts.forEach((regTimeout) => {
       clearTimeout(regTimeout);
     });
     regTimeouts = [];
+    NODE.removeAllStatuses();
   });
 };

@@ -19,7 +19,8 @@ module.exports = (NODE) => {
 
   let regIntervals = [];
   triggerIn.on('trigger', (conn, state) => {
-    msecIn.getValues(state).then((intervals) => {
+    msecIn.getValues(state)
+    .then((intervals) => {
       let fromData = false;
       if (!intervals.length) {
         fromData = true;
@@ -42,10 +43,10 @@ module.exports = (NODE) => {
   });
 
   clearIn.on('trigger', () => {
-    // TODO: clear progress bars as well
     regIntervals.forEach((regInterval) => {
       clearInterval(regInterval);
     });
     regIntervals = [];
+    NODE.removeAllStatuses();
   });
 };
