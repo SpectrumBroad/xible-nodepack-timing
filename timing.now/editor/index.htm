@@ -1,5 +1,8 @@
-<div class="date"></div>
 <style type="text/css">
+	.date {
+		text-align: center;
+	}
+
 	.face {
 		margin-left: auto;
 		margin-right: auto;
@@ -99,6 +102,7 @@
 		height: 45%;
 	}
 </style>
+<div class="date"></div>
 <div class="face">
 	<div class="tick"></div>
 	<div class="tick"></div>
@@ -117,28 +121,26 @@
 	<div class="hand sec"></div>
 </div>
 <script>
-	let date = document.querySelector('.date');
-	let monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Augustus', 'September', 'October', 'November', 'December'];
+	const date = document.querySelector('.date');
+	const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Augustus', 'September', 'October', 'November', 'December'];
 
-	let clock = document.querySelector('.face');
-	let hour = clock.querySelector('.hour');
-	let min = clock.querySelector('.min');
-	let sec = clock.querySelector('.sec');
+	const clock = document.querySelector('.face');
+	const hour = clock.querySelector('.hour');
+	const min = clock.querySelector('.min');
+	const sec = clock.querySelector('.sec');
 
 	function setClockFace() {
+		const d = new Date();
 
-		let d = new Date();
-
-		let hdeg = d.getHours() * (360 / 12);
-		let mdeg = (d.getMinutes() / 60) * 360;
-		let sdeg = (d.getSeconds() / 60) * 360;
+		const hdeg = d.getHours() * (360 / 12);
+		const mdeg = (d.getMinutes() / 60) * 360;
+		const sdeg = (d.getSeconds() / 60) * 360;
 
 		hour.style.transform = 'rotate(' + (hdeg + (mdeg / 12)) + 'deg)';
 		min.style.transform = 'rotate(' + mdeg + 'deg)';
 		sec.style.transform = 'rotate(' + sdeg + 'deg)';
 
 		date.innerHTML = d.getDate() + ' ' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
-
 	}
 
 	setClockFace();
