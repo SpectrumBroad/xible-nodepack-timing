@@ -6,6 +6,9 @@
     "trigger": {
       "type": "trigger"
     },
+    "clear": {
+      "type": "trigger"
+    },
     "msecs": {
       "type": "math.number"
     }

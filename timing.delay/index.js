@@ -2,12 +2,15 @@
 
 module.exports = (NODE) => {
   const triggerIn = NODE.getInputByName('trigger');
+  const clearIn = NODE.getInputByName('clear');
   const msecIn = NODE.getInputByName('msecs');
 
   const triggerOut = NODE.getOutputByName('done');
 
+  let regTimeouts = [];
   triggerIn.on('trigger', (conn, state) => {
-    msecIn.getValues(state).then((delays) => {
+    msecIn.getValues(state)
+    .then((delays) => {
       let fromData = false;
       if (!delays.length) {
         fromData = true;
@@ -24,8 +27,16 @@ module.exports = (NODE) => {
           timeout: delay + 700
         });
 
-        setTimeout(() => triggerOut.trigger(state), delay);
+        regTimeouts.push(setTimeout(() => triggerOut.trigger(state), delay));
       });
     });
+  });
+
+  clearIn.on('trigger', () => {
+    // TODO: clear progress bars as well
+    regTimeouts.forEach((regTimeout) => {
+      clearTimeout(regTimeout);
+    });
+    regTimeouts = [];
   });
 };
