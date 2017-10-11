@@ -4,18 +4,22 @@
   "description": "Waits the given time in milliseconds before triggering the output.",
   "inputs": {
     "trigger": {
-      "type": "trigger"
+      "type": "trigger",
+      "description": "Starts the delay(s)."
     },
     "clear": {
-      "type": "trigger"
+      "type": "trigger",
+      "description": "Clears all current delays, thus preventing the 'done' output from being triggered any more."
     },
     "msecs": {
-      "type": "math.number"
+      "type": "math.number",
+      "description": "One or more number indicating how many milliseconds to delay. If multiple numbers are given, multiple delays are started. As a result, the 'done' output will be triggered multiple times."
     }
   },
   "outputs": {
     "done": {
-      "type": "trigger"
+      "type": "trigger",
+      "description": "Triggered for each completed delay."
     }
   }
 }

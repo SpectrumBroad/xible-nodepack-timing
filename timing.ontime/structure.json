@@ -1,7 +1,7 @@
 {
   "name": "timing.ontime",
   "type": "event",
-  "description": "Triggered when the given time hits.",
+  "description": "Triggered when one of the given times hits.",
   "inputs": {
     "trigger": {
       "type": "trigger"

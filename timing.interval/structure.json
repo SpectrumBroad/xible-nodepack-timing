@@ -1,21 +1,25 @@
 {
   "name": "timing.interval",
   "type": "action",
-  "description": "Triggers the output in an interval, every given x milliseconds.",
+  "description": "Triggers the output at an interval, every given x milliseconds.",
   "inputs": {
     "trigger": {
-      "type": "trigger"
+      "type": "trigger",
+      "description": "Starts the interval(s)."
     },
     "clear": {
-      "type": "trigger"
+      "type": "trigger",
+      "description": "Clears all current intervals, thus preventing the 'done' output from being triggered any more."
     },
     "msecs": {
-      "type": "math.number"
+      "type": "math.number",
+      "description": "The time, in milliseconds, the timer should delay between each trigger of the 'done' output. If multiple numbers are given, multiple intervals are started."
     }
   },
   "outputs": {
     "done": {
-      "type": "trigger"
+      "type": "trigger",
+      "description": "Triggered at every interval."
     }
   }
 }
