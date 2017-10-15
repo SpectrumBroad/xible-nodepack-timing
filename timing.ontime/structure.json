@@ -1,13 +1,19 @@
 {
   "name": "timing.ontime",
   "type": "event",
-  "description": "Triggered when one of the given times hits.",
+  "description": "Triggers when one of the given times hits.",
   "inputs": {
     "trigger": {
-      "type": "trigger"
+      "type": "trigger",
+      "description": "If disconnected, the event listener is started when the flow starts. Otherwise, it is started when this trigger is hit."
+    },
+    "clear": {
+      "type": "trigger",
+      "description": "Clear all future events, stop watching. You can start watching again by hitting the trigger input."
     },
     "times": {
-      "type": "timing.time"
+      "type": "timing.time",
+      "description": "The times to watch."
     }
   },
   "outputs": {
