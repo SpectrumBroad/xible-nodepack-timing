@@ -44,13 +44,11 @@ module.exports = (NODE) => {
 
   /**
    * Sets up the timers for each timesIn input.
-   * @param {FlowState} state 
+   * @param {FlowState} state
    */
   async function triggerFunction(state) {
     const inputTimes = await timesIn.getValues(state);
-
     const now = new Date();
-    now.setFullYear(0, 0, 1);
 
     inputTimes.forEach((d) => {
       triggerOnDate(d, state, now);
@@ -59,23 +57,27 @@ module.exports = (NODE) => {
 
   /**
    * Sets up the timer based on a given date.
-   * @param {Date} d 
-   * @param {FlowState} state 
-   * @param {Date} now 
+   * @param {Date} d A flat time, without a year, month or day.
+   * If these are provided anyway, they will not be used.
+   * @param {FlowState} state
+   * @param {Date} now
    */
   function triggerOnDate(d, state, now) {
     if (!now) {
       now = new Date();
-      now.setFullYear(0, 0, 1);
     }
 
+    const todayD = new Date(now);
+    todayD.setHours(d.getHours(), d.getMinutes(), d.getSeconds());
+
     // calc the difference between the requested time and now
-    let diff = d.getTime() - now.getTime();
+    let diff = todayD.getTime() - now.getTime();
 
     // schedule the next day if the diff is in the past
     if (diff < 0) {
-      d.setDate(d.getDate() + 1);
-      diff = d.getTime() - now.getTime();
+      const nextDay = new Date(todayD);
+      nextDay.setDate(nextDay.getDate() + 1);
+      diff = nextDay.getTime() - now.getTime();
     }
 
     const timeout = setTimeout(() => {
